@@ -113,12 +113,9 @@ public final class RetryHandlingFileSystemMasterClient extends AbstractMasterCli
   @Override
   public synchronized void createFile(final AlluxioURI path, final CreateFileOptions options)
       throws AlluxioStatusException {
-    retryRPC(new RpcCallable<Void>() {
-      @Override
-      public Void call() throws TException {
-        mClient.createFile(path.getPath(), options.toThrift());
-        return null;
-      }
+    retryRPC((RpcCallable<Void>) () -> {
+      mClient.createFile(path.getPath(), options.toThrift());
+      return null;
     });
   }
 
